@@ -8,13 +8,14 @@ clientSocket.settimeout(1)
 for i in range(10):
     sendTime = clock_gettime_ns(CLOCK_MONOTONIC)
     message = f"Ping {i + 1} {sendTime}"
-    clientSocket.sendto(message.encode(), ("127.0.0.1", 12000))
+    clientSocket.sendto(message.encode(), ("100.114.252.36", 12000))
     try:
         response = clientSocket.recv(1024).decode()
         responseTime = clock_gettime_ns(CLOCK_MONOTONIC)
         RTT = (responseTime - sendTime) / 1e9
-        print(f"Response: {response} | RTT: {RTT:.7f} sec")
+        print(f"Response: {response}\nRTT: {RTT:.6f} sec")
     except TimeoutError:
         print("Request timed out")
+    print("\n")
 
 print("---------------------------")
