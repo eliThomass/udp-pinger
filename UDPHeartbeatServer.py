@@ -15,8 +15,8 @@ while True:
         # Receive the client packet along with the address it is coming from
         message, address = serverSocket.recvfrom(1024)
         msg = message.decode().split()
-        sequence_num = msg[1]
-        sent_time = float(msg[2])
+        sequence_num = msg[0]
+        sent_time = float(msg[1])
         time_diff = time() - sent_time
         print(f"Packet {sequence_num} received. Time difference: {time_diff:.6f} s")
     except TimeoutError:
