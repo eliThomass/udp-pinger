@@ -24,7 +24,10 @@ for i in range(numPackets):
         if RTT < minRTT or RTT > maxRTT:
             minRTT = min(minRTT, RTT)
             maxRTT = max(maxRTT, RTT)
-        avgRTT += RTT
+        if numPackets > numLost:
+            avgRTT /= (numPackets - numLost)
+        else:
+            avgRTT = 0
         print(f"Response: {response}\nRTT: {RTT:.6f} s")
     except TimeoutError:
         numLost += 1
