@@ -1,20 +1,23 @@
 # UDPHeartbeatServer.py
 from socket import *
+from time import time
 # Create a UDP socket
 # Notice the use of SOCK_DGRAM for UDP packets
 serverSocket = socket(AF_INET, SOCK_DGRAM)
 # Assign IP address and port number to socket
 serverSocket.bind(('', 12000))
 
+# Assume client is dead after 5 seconds
+serverSocket.settimeout(5)
+
 while True:
-    # Generate random number in the range of 0 to 10
-    rand = random.randint(0, 10)
-    # Receive the client packet along with the address it is coming from
-    message, address = serverSocket.recvfrom(1024)
-    # Capitalize the message from the client
-    message = message.upper()
-    # If rand is less is than 4, we consider the packet lost and do not respond
-    if rand < 4:
-        continue
-    # Otherwise, the server responds
-    serverSocket.sendto(message, address)
+    try:
+        # Receive the client packet along with the address it is coming from
+        message, address = serverSocket.recvfrom(1024)
+        msg = message.decode().split()
+        sequence_num = msg[1]
+        sent_time = float(msg[2])
+        time_diff = time() - sent_time
+        print(f"Packet {sequence_num} received. Time difference: {time_diff:.6f} s")
+    except TimeoutError:
+        print(f"Client stopped responding. RIP")
